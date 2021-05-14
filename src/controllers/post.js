@@ -3,9 +3,10 @@ import Post from '../models/post';
 export const createPost = async (postFields) => {
   const post = new Post();
   post.title = postFields.title;
-  post.tags = postFields.tags.split(' ');
+  post.tags = postFields.tags;
   post.content = postFields.content;
   post.coverUrl = postFields.coverUrl;
+  post.comments = postFields.comments;
   try {
     const savedpost = await post.save();
     return savedpost;
