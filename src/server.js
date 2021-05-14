@@ -3,11 +3,21 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import path from 'path';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
 import apiRouter from './router';
+
+// DB Setup
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/platform_db';
+
+mongoose.connect(mongoURI).then(() => {
+  console.log('connected to database:', mongoURI);
+}).catch((err) => {
+  console.log('error: could not connect to db:', err);
+});
+
 
 // initialize
 const app = express();
-const ROOT_URL = 'http://localhost:9090/api';
 
 // enable/disable cross origin resource sharing if necessary
 app.use(cors());
@@ -30,12 +40,13 @@ app.use(bodyParser.json());
 
 // additional init stuff should go before hitting the routing
 
+app.use('/api', apiRouter);
+
 // default index route
 app.get('/', (req, res) => {
   res.send('hi');
 });
 
-app.use('/api', apiRouter);
 
 // START THE SERVER
 // =============================================================================
