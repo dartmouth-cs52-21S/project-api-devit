@@ -11,6 +11,7 @@ I thought the models, routes and controllers were easy to follow. I liked that w
 I initially had an issue with my calls just stalling and never returning promises. This was a frusterating issue to debug, but I just restarted the instructions and I forgot to `npm install mongoose`. I did this in SA 7 too!
 
 ## Extra Credit
+I set up tags as a string aray and split on space. I also updated the frontend to display accordingly.
 
 ## Screenshots
 Same as lab 4! No frontend updates.

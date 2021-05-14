@@ -3,7 +3,7 @@ import Post from '../models/post';
 export const createPost = async (postFields) => {
   const post = new Post();
   post.title = postFields.title;
-  post.tags = postFields.tags;
+  post.tags = postFields.tags.split(' ');
   post.content = postFields.content;
   post.coverUrl = postFields.coverUrl;
   try {
