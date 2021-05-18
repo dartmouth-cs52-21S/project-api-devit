@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import * as Posts from './controllers/post';
+import * as User from './controllers/user';
+import { requireAuth, requireSignin } from './services/passport';
 
 
 const router = Router();
@@ -18,7 +20,7 @@ router.route('/posts')
       res.status(500).json({ error });
     }
   })
-  .post(async (req, res) => {
+  .post(requireAuth, async (req, res) => {
     try {
       const result = await Posts.createPost(req.body);
       res.json(result);
@@ -36,7 +38,7 @@ router.route('/posts/:id')
       res.status(500).json({ error });
     }
   })
-  .put(async (req, res) => {
+  .put(requireAuth, async (req, res) => {
     try {
       const result = await Posts.updatePost(req.params.id, req.body);
       res.json(result);
@@ -44,7 +46,7 @@ router.route('/posts/:id')
       res.status(500).json({ error });
     }
   })
-  .delete(async (req, res) => {
+  .delete(requireAuth, async (req, res) => {
     try {
       const result = await Posts.deletePost(req.params.id);
       res.json(result);
@@ -52,5 +54,24 @@ router.route('/posts/:id')
       res.status(500).json({ error });
     }
   });
+
+router.post('/signin', requireSignin, async (req, res) => {
+  try {
+    const token = User.signin(req.user);
+    res.json({ token, email: req.user.email });
+  } catch (error) {
+    res.status(422).send({ error: error.toString() });
+  }
+});
+
+
+router.post('/signup', async (req, res) => {
+  try {
+    const token = await User.signup(req.body);
+    res.json({ token, email: req.body.email });
+  } catch (error) {
+    res.status(422).send({ error: error.toString() });
+  }
+});
 
 export default router;
