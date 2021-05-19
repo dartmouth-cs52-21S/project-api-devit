@@ -4,10 +4,10 @@ import cors from 'cors';
 import path from 'path';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
-import apiRouter from './router';
+import routers from './routers';
 
 // DB Setup
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/platform_db';
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/devit';
 
 mongoose.connect(mongoURI).then(() => {
   console.log('connected to database:', mongoURI);
@@ -39,8 +39,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // additional init stuff should go before hitting the routing
-
-app.use('/api', apiRouter);
+app.use('/api', routers);
 
 // default index route
 app.get('/', (req, res) => {

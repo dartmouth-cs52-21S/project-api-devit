@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import * as Posts from './controllers/post';
-import * as User from './controllers/user';
-import { requireAuth, requireSignin } from './services/passport';
+import * as Posts from '../controllers/post';
+import * as User from '../controllers/user';
+import { requireAuth, requireSignin } from '../services/passport';
 
 
 const router = Router();

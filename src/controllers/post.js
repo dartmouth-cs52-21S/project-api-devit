@@ -3,10 +3,7 @@ import Post from '../models/post';
 export const createPost = async (postFields, author) => {
   const post = new Post();
   post.title = postFields.title;
-  post.tags = postFields.tags;
   post.content = postFields.content;
-  post.coverUrl = postFields.coverUrl;
-  post.comments = postFields.comments;
   post.author = author;
 
   const savedpost = await post.save();
@@ -16,9 +13,11 @@ export const createPost = async (postFields, author) => {
   }
   throw new Error('Create Post Error');
 };
+
 export const getPosts = async () => {
   return Post.find();
 };
+
 export const getPost = async (id) => {
   try {
     const post = await Post.findById({ _id: id });
@@ -31,6 +30,7 @@ export const getPost = async (id) => {
     throw new Error(`fetch single post error: ${error}`);
   }
 };
+
 export const deletePost = async (id) => {
   try {
     const post = await Post.findByIdAndDelete({ _id: id });
