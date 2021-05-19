@@ -30,7 +30,6 @@ export const signup = async ({ email, password, author }) => {
   // here you should use the User model to create a new user.
   // this is similar to how you created a Post
   // and then save and return a token
-  console.log('auhtor', author);
   const user = new User();
   user.email = email;
   user.password = password;
