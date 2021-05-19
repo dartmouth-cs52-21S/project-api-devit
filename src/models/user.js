@@ -4,9 +4,19 @@ import bcrypt from 'bcryptjs';
 const UserSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
   password: { type: String },
+  author: { type: String },
 }, {
   toObject: { virtuals: true },
-  toJSON: { virtuals: true },
+  toJSON: {
+    virtuals: true,
+    transform(doc, ret, options) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.password;
+      delete ret.__v;
+      return ret;
+    },
+  },
   timestamps: true,
 });
 

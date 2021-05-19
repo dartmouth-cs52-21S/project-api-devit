@@ -13,7 +13,7 @@ export const signin = (user) => {
 };
 
 // note the lovely destructuring here indicating that we are passing in an object with these 3 keys
-export const signup = async ({ email, password }) => {
+export const signup = async ({ email, password, author }) => {
   if (!email || !password) {
     throw new Error('You must provide email and password');
   }
@@ -30,9 +30,11 @@ export const signup = async ({ email, password }) => {
   // here you should use the User model to create a new user.
   // this is similar to how you created a Post
   // and then save and return a token
+  console.log('auhtor', author);
   const user = new User();
   user.email = email;
   user.password = password;
+  user.author = author;
   await user.save();
   return tokenForUser(user);
 };

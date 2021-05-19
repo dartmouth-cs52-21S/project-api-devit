@@ -1,19 +1,20 @@
 import Post from '../models/post';
 
-export const createPost = async (postFields) => {
+export const createPost = async (postFields, author) => {
   const post = new Post();
   post.title = postFields.title;
   post.tags = postFields.tags;
   post.content = postFields.content;
   post.coverUrl = postFields.coverUrl;
   post.comments = postFields.comments;
-  post.author = postFields.author;
-  try {
-    const savedpost = await post.save();
-    return savedpost;
-  } catch (error) {
-    throw new Error(`create post error: ${error}`);
+  post.author = author;
+
+  const savedpost = await post.save();
+  if (savedpost) {
+    const populated = await savedpost.populate('author').execPopulate();
+    return populated;
   }
+  throw new Error('Create Post Error');
 };
 export const getPosts = async () => {
   return Post.find();
@@ -21,6 +22,10 @@ export const getPosts = async () => {
 export const getPost = async (id) => {
   try {
     const post = await Post.findById({ _id: id });
+    if (post) {
+      const populated = await post.populate('author').execPopulate();
+      return populated;
+    }
     return post;
   } catch (error) {
     throw new Error(`fetch single post error: ${error}`);
