@@ -30,16 +30,16 @@ const localLogin = new LocalStrategy(localOptions, async (email, password, done)
   try {
     user = await User.findOne({ email });
     if (!user) {
-      return done(null, false);
+      return done(null, false); // if user doesn't exists, return/break with no error
     }
     match = await user.comparePassword(password);
     if (!match) {
-      return done(null, false);
+      return done(null, false); // if password does not match, return/break with no error
     } else {
-      return done(null, user);
+      return done(null, user); // if password matches, return with user and no error
     }
   } catch (error) {
-    return done(error);
+    return done(error); // if error, pass error
   }
 });
 
@@ -48,12 +48,12 @@ const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
   try {
     user = await User.findById(payload.sub);
   } catch (error) {
-    done(error, false);
+    done(error, false); // if error finding user, pass error
   }
   if (user) {
-    done(null, user);
+    done(null, user); // if user exists, return user
   } else {
-    done(null, false);
+    done(null, false); // if no user by that id exists, return/break with no error
   }
 });
 
