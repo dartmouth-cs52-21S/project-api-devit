@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import * as Posts from './controllers/post';
-import * as User from './controllers/user';
-import { requireAuth, requireSignin } from './services/passport';
+import * as Posts from '../controllers/post';
+import * as User from '../controllers/user';
+import { requireAuth, requireSignin } from '../services/passport';
 
 
 const router = Router();
@@ -58,7 +58,7 @@ router.route('/posts/:id')
 router.post('/signin', requireSignin, async (req, res) => {
   try {
     const token = User.signin(req.user);
-    res.json({ token, email: req.user.email });
+    res.json({ token, email: req.user.email, author: req.user.author });
   } catch (error) {
     res.status(422).send({ error: error.toString() });
   }
@@ -68,7 +68,7 @@ router.post('/signin', requireSignin, async (req, res) => {
 router.post('/signup', async (req, res) => {
   try {
     const token = await User.signup(req.body);
-    res.json({ token, email: req.body.email });
+    res.json({ token, email: req.body.email, author: req.body.author });
   } catch (error) {
     res.status(422).send({ error: error.toString() });
   }
