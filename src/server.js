@@ -3,18 +3,11 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import path from 'path';
 import morgan from 'morgan';
-import mongoose from 'mongoose';
 import routers from './routers';
+import connetToDb from './db';
 
-// DB Setup
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/devit';
-
-mongoose.connect(mongoURI).then(() => {
-  console.log('connected to database:', mongoURI);
-}).catch((err) => {
-  console.log('error: could not connect to db:', err);
-});
-
+// Connect to DB
+connetToDb();
 
 // initialize
 const app = express();
@@ -52,4 +45,4 @@ app.get('/', (req, res) => {
 const port = process.env.PORT || 9090;
 app.listen(port);
 
-console.log(`listening on: ${port}`);
+console.log(`🎧 listening on: ${port}`);
