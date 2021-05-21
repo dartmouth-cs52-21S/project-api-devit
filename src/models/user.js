@@ -4,7 +4,15 @@ import bcrypt from 'bcryptjs';
 const UserSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
   password: { type: String },
-  author: { type: String },
+  firstName: { type: String },
+  lastName: { type: String },
+  location: { type: String },
+  picture: { type: String },
+  bio: { type: String },
+  roles: { type: [String] },
+  skills: { type: [String] },
+  badges: { type: [String] },
+  projects: { type: [Schema.Types.ObjectId], ref: 'Project' },
 }, {
   toObject: { virtuals: true },
   toJSON: {
@@ -22,8 +30,6 @@ const UserSchema = new Schema({
 
 // eslint-disable-next-line consistent-return
 UserSchema.pre('save', async function saveModel(next) {
-  // this is a reference to our model
-  // the function runs in some other context so DO NOT bind it
   const user = this;
 
   try {
@@ -35,9 +41,6 @@ UserSchema.pre('save', async function saveModel(next) {
   } catch (error) {
     next(error);
   }
-  // when done run the **next** callback with no arguments
-  // call next with an error if you encounter one
-  // return next();
 });
 
 UserSchema.methods.comparePassword = async function comparePassword(candidatePassword) {
