@@ -36,21 +36,7 @@ export const signup = async (newUser) => {
     throw new Error('Email is in use');
   }
 
-
-  // 🚀 TODO:
-  const user = new UserModel();
-  user.email = newUser.email;
-  user.password = newUser.password;
-  user.firstName = newUser.firstName || 'First Name';
-  user.lastName = newUser.lastName || 'Last Name';
-  user.location = newUser.location || 'Location, USA';
-  user.picture = newUser.picture || '';
-  user.bio = newUser.bio || '';
-  user.roles = newUser.roles || [];
-  user.skills = newUser.skills || [];
-  user.badges = newUser.badges || [];
-  user.projects = [];
-  await user.save();
+  const user = await UserModel.create(newUser);
   return tokenForUser(user);
 };
 
