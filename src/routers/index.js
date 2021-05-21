@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as Project from '../controllers/project';
 import * as User from '../controllers/user';
-import { requireAuth, requireSignin } from '../services/passport';
+import { requireSignin } from '../services/passport';
 
 
 const router = Router();
@@ -20,14 +20,17 @@ router.route('/projects')
       res.status(500).json({ error });
     }
   })
-  .post(requireAuth, async (req, res) => {
-    try {
-      const result = await Project.createProject(req.body, req.user);
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ error });
-    }
-  });
+  .post(
+    // requireAuth,
+    async (req, res) => {
+      try {
+        const result = await Project.createProject(req.body, req.user);
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ error });
+      }
+    },
+  );
 
 router.route('/projects/:id')
   .get(async (req, res) => {
@@ -38,22 +41,28 @@ router.route('/projects/:id')
       res.status(500).json({ error });
     }
   })
-  .put(requireAuth, async (req, res) => {
-    try {
-      const result = await Project.updateProject(req.params.id, req.body);
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ error });
-    }
-  })
-  .delete(requireAuth, async (req, res) => {
-    try {
-      const result = await Project.deleteProject(req.params.id);
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ error });
-    }
-  });
+  .put(
+    // requireAuth,
+    async (req, res) => {
+      try {
+        const result = await Project.updateProject(req.params.id, req.body);
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ error });
+      }
+    },
+  )
+  .delete(
+    // requireAuth,
+    async (req, res) => {
+      try {
+        const result = await Project.deleteProject(req.params.id);
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ error });
+      }
+    },
+  );
 
 router.post('/signin', requireSignin, async (req, res) => {
   try {

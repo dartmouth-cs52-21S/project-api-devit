@@ -2,15 +2,8 @@ import ProjectModel from '../models/project';
 
 export const createProject = async (newProj, author) => {
   try {
-    const project = new ProjectModel();
-    project.name = newProj.name || '';
-    project.bio = newProj.bio || '';
-    project.industry = newProj.industry || [];
-    project.tools = newProj.tools || [];
-    project.logo = newProj.logo || '';
-    project.neededTeam = newProj.neededTeam || [];
-    project.team = [author];
-    const proj = await project.save();
+    newProj.team = [author];
+    const proj = await ProjectModel.create(newProj);
     if (proj) {
       const populated = await proj.populate('team').execPopulate();
       return populated;
