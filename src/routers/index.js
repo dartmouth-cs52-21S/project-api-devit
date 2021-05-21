@@ -7,7 +7,7 @@ import { requireSignin } from '../services/passport';
 const router = Router();
 
 router.get('/', (req, res) => {
-  res.json({ message: 'welcome to our blog api!' });
+  res.json({ message: 'welcome to our project devit api!' });
 });
 
 
@@ -77,10 +77,46 @@ router.post('/signin', requireSignin, async (req, res) => {
 router.post('/signup', async (req, res) => {
   try {
     const token = await User.signup(req.body);
-    res.json({ token, email: req.body.email, author: req.body.author });
+    res.json({ token, user: req.body });
   } catch (error) {
     res.status(422).send({ error: error.toString() });
   }
 });
+
+router.route('/user/')
+  .get(async (req, res) => {
+    try {
+      const result = await User.getAllUsers();
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  });
+
+router.route('/user/:id')
+  .get(async (req, res) => {
+    try {
+      const result = await User.getUserById(req.params.id);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  })
+  .put(async (req, res) => {
+    try {
+      const result = await User.updateUser(req.params.id, req.body);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      const result = await User.deleteUser(req.params.id);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  });
 
 export default router;
