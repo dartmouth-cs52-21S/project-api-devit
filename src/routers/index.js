@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import * as Posts from '../controllers/post';
+import * as Project from '../controllers/project';
 import * as User from '../controllers/user';
-import { requireAuth, requireSignin } from '../services/passport';
+import { requireSignin } from '../services/passport';
 
 
 const router = Router();
@@ -11,49 +11,58 @@ router.get('/', (req, res) => {
 });
 
 
-router.route('/posts')
+router.route('/projects')
   .get(async (req, res) => {
     try {
-      const result = await Posts.getPosts();
+      const result = await Project.getProjects();
       res.json(result);
     } catch (error) {
       res.status(500).json({ error });
     }
   })
-  .post(requireAuth, async (req, res) => {
-    try {
-      const result = await Posts.createPost(req.body, req.user);
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ error });
-    }
-  });
+  .post(
+    // requireAuth,
+    async (req, res) => {
+      try {
+        const result = await Project.createProject(req.body, req.user);
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ error });
+      }
+    },
+  );
 
-router.route('/posts/:id')
+router.route('/projects/:id')
   .get(async (req, res) => {
     try {
-      const result = await Posts.getPost(req.params.id);
+      const result = await Project.getProject(req.params.id);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error });
     }
   })
-  .put(requireAuth, async (req, res) => {
-    try {
-      const result = await Posts.updatePost(req.params.id, req.body);
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ error });
-    }
-  })
-  .delete(requireAuth, async (req, res) => {
-    try {
-      const result = await Posts.deletePost(req.params.id);
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ error });
-    }
-  });
+  .put(
+    // requireAuth,
+    async (req, res) => {
+      try {
+        const result = await Project.updateProject(req.params.id, req.body);
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ error });
+      }
+    },
+  )
+  .delete(
+    // requireAuth,
+    async (req, res) => {
+      try {
+        const result = await Project.deleteProject(req.params.id);
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ error });
+      }
+    },
+  );
 
 router.post('/signin', requireSignin, async (req, res) => {
   try {
