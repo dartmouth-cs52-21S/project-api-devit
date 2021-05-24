@@ -1,15 +1,14 @@
+/* eslint-disable object-curly-newline */
 import { Router } from 'express';
 import * as Project from '../controllers/project';
 import * as User from '../controllers/user';
 import { requireSignin } from '../services/passport';
-
 
 const router = Router();
 
 router.get('/', (req, res) => {
   res.json({ message: 'welcome to our project devit api!' });
 });
-
 
 router.route('/projects')
   .get(async (req, res) => {
@@ -64,26 +63,28 @@ router.route('/projects/:id')
     },
   );
 
-router.post('/signin', requireSignin, async (req, res) => {
-  try {
-    const token = User.signin(req.user);
-    res.json({ token, email: req.user.email, author: req.user.author });
-  } catch (error) {
-    res.status(422).send({ error: error.toString() });
-  }
-});
-
-
+// Updated
 router.post('/signup', async (req, res) => {
   try {
-    const token = await User.signup(req.body);
-    res.json({ token, user: req.body });
+    const receivedUser = req.body;
+    const { token, user: { id, email, firstName, lastName, projects } } = await User.signup(receivedUser);
+    res.json({ token, user: { id, email, firstName, lastName, projects } });
   } catch (error) {
     res.status(422).send({ error: error.toString() });
   }
 });
 
-router.route('/user/')
+// Updated
+router.post('/signin', requireSignin, async (req, res) => {
+  try {
+    const { token, user: { id, email, firstName, lastName, projects } } = await User.signin(req.user);
+    res.json({ token, user: { id, email, firstName, lastName, projects } });
+  } catch (error) {
+    res.status(422).send({ error: error.toString() });
+  }
+});
+
+router.route('/users/')
   .get(async (req, res) => {
     try {
       const result = await User.getAllUsers();
@@ -93,7 +94,7 @@ router.route('/user/')
     }
   });
 
-router.route('/user/:id')
+router.route('/users/:id')
   .get(async (req, res) => {
     try {
       const result = await User.getUserById(req.params.id);
