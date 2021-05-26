@@ -2,6 +2,7 @@ import ProjectModel from '../models/project';
 
 export const createProject = async (newProj, author) => {
   try {
+    console.log('here');
     newProj.team = [author];
     const proj = await ProjectModel.create(newProj);
     if (proj) {

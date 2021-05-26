@@ -18,3 +18,15 @@ const ProjectSchema = new Schema({
 const ProjectModel = mongoose.model('Project', ProjectSchema);
 
 export default ProjectModel;
+
+
+// db.projects.insert(
+//   {
+//     "name": "blabla",
+//     "bio": "this my bio",
+//     "industry": ["finance", "health"],
+//     "tools": ["react", "HTML"],
+//     "logo": "https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/60063/467371_21871.png",
+//     "neededTeam": ["developer", "desginer"]
+//   }
+// )

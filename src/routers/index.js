@@ -14,6 +14,7 @@ router.get('/', (req, res) => {
 router.route('/projects')
   .get(async (req, res) => {
     try {
+      console.log('here');
       const result = await Project.getProjects();
       res.json(result);
     } catch (error) {
