@@ -3,8 +3,11 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import path from 'path';
 import morgan from 'morgan';
+import dotenv from 'dotenv';
 import routers from './routers';
 import connetToDb from './db';
+
+dotenv.config({ silent: true });
 
 // Connect to DB
 connetToDb();
