@@ -67,8 +67,8 @@ router.route('/projects/:id')
 router.post('/signup', async (req, res) => {
   try {
     const receivedUser = req.body;
-    const { token, user: { id, email, firstName, lastName, projects } } = await User.signup(receivedUser);
-    res.json({ token, user: { id, email, firstName, lastName, projects } });
+    const { token, user: { id, email, firstName, lastName, location, picture, bio, roles, skills, badges, projects } } = await User.signup(receivedUser);
+    res.json({ token, user: { id, email, firstName, lastName, location, picture, bio, roles, skills, badges, projects } });
   } catch (error) {
     res.status(422).send({ error: error.toString() });
   }
@@ -77,8 +77,8 @@ router.post('/signup', async (req, res) => {
 // Updated
 router.post('/signin', requireSignin, async (req, res) => {
   try {
-    const { token, user: { id, email, firstName, lastName, projects } } = await User.signin(req.user);
-    res.json({ token, user: { id, email, firstName, lastName, projects } });
+    const { token, user: { id, email, firstName, lastName, location, picture, bio, roles, skills, badges, projects } } = await User.signin(req.user);
+    res.json({ token, user: { id, email, firstName, lastName, location, picture, bio, roles, skills, badges, projects } });
   } catch (error) {
     res.status(422).send({ error: error.toString() });
   }
