@@ -15,8 +15,9 @@ function tokenForUser(user) {
  * @param {Object} user
  * @returns {Object} user token
  */
-export const signin = (user) => {
-  return tokenForUser(user);
+export const signin = async (userCredentials) => {
+  const user = await UserModel.findOne({ email: userCredentials.email });
+  return { token: tokenForUser(userCredentials), user };
 };
 
 /**
@@ -25,19 +26,15 @@ export const signin = (user) => {
  * @returns {Object} user token
  */
 export const signup = async (newUser) => {
-  if (!newUser.email || !newUser.password) {
-    throw new Error('You must provide email and password');
-  }
+  if (!newUser.email || !newUser.password) throw new Error('You must provide email and password');
 
-  // See if a user with the given email exists
   const existingUser = await UserModel.findOne({ email: newUser.email });
-  if (existingUser) {
-    // If a user with email does exist, return an error
-    throw new Error('Email is in use');
-  }
+
+  if (existingUser) throw new Error('Email is in use');
 
   const user = await UserModel.create(newUser);
-  return tokenForUser(user);
+
+  return { token: tokenForUser(user), user };
 };
 
 /**
