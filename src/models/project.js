@@ -6,6 +6,9 @@ const ProjectSchema = new Schema({
   bio: { type: String },
   industry: { type: [String] },
   tools: { type: [String] },
+  Figma: { type: [String] },
+  GitHub: { type: [String] },
+  Slack: { type: [String] },
   logo: { type: String },
   neededTeam: { type: [String] },
   team: { type: [Schema.Types.ObjectId], ref: 'User' },
@@ -18,15 +21,3 @@ const ProjectSchema = new Schema({
 const ProjectModel = mongoose.model('Project', ProjectSchema);
 
 export default ProjectModel;
-
-
-// db.projects.insert(
-//   {
-//     "name": "blabla",
-//     "bio": "this my bio",
-//     "industry": ["finance", "health"],
-//     "tools": ["react", "HTML"],
-//     "logo": "https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/60063/467371_21871.png",
-//     "neededTeam": ["developer", "desginer"]
-//   }
-// )
