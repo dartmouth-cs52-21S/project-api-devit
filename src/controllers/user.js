@@ -33,6 +33,7 @@ export const signup = async (newUser) => {
   if (existingUser) throw new Error('Email is in use');
 
   const user = await UserModel.create(newUser);
+  console.log('controller', user);
 
   return { token: tokenForUser(user), user };
 };
