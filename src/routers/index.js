@@ -2,6 +2,7 @@
 import { Router } from 'express';
 import * as Project from '../controllers/project';
 import * as User from '../controllers/user';
+import * as ChatMessage from '../controllers/chatMessage';
 import { requireSignin } from '../services/passport';
 import signS3 from '../services/s3';
 
@@ -64,7 +65,6 @@ router.route('/projects/:id')
     },
   );
 
-// Updated
 router.post('/signup', async (req, res) => {
   try {
     const receivedUser = req.body;
@@ -75,7 +75,6 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Updated
 router.post('/signin', requireSignin, async (req, res) => {
   try {
     const { token, user: { id, email, firstName, lastName, location, picture, bio, roles, skills, badges, projects } } = await User.signin(req.user);
@@ -123,4 +122,37 @@ router.route('/users/:id')
 
 router.get('/sign-s3', signS3);
 
+router.route('/chat-messages/:projectId')
+  .get(async (req, res) => {
+    try {
+      const chatMessages = await ChatMessage.getChatMessages(req.params.projectId);
+      res.json(chatMessages);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  })
+  .post(async (req, res) => {
+    try {
+      const chatMessage = await ChatMessage.createChatMessage(req.body.message);
+      res.json(chatMessage);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  })
+  .put(async (req, res) => {
+    try {
+      const updatedChatMessage = await ChatMessage.updateChatMessage(req.body.messageId, req.body);
+      res.json(updatedChatMessage);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      const updatedChatMessage = await ChatMessage.deleteChatMessage(req.body.messageId);
+      res.json(updatedChatMessage);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  });
 export default router;
