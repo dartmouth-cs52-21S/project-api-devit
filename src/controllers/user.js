@@ -11,6 +11,25 @@ function tokenForUser(user) {
 }
 
 /**
+ * @description retrieves user from token
+ * @param {String} token
+ */
+function decodeToken(token) {
+  return jwt.decode(token, process.env.AUTH_SECRET);
+}
+
+/**
+ * @description sign in user, authentication is done in middleware
+ * @param {Object} user
+ * @returns {Object} user token
+ */
+export const reauthenticateUser = async (token) => {
+  const decodedToken = decodeToken(token);
+  const user = await UserModel.findOne({ _id: decodedToken.sub });
+  return { token, user };
+};
+
+/**
  * @description sign in user, authentication is done in middleware
  * @param {Object} user
  * @returns {Object} user token

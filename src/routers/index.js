@@ -15,7 +15,6 @@ router.get('/', (req, res) => {
 router.route('/projects')
   .get(async (req, res) => {
     try {
-      console.log('here');
       const result = await Project.getProjects();
       res.json(result);
     } catch (error) {
@@ -66,6 +65,15 @@ router.route('/projects/:id')
     },
   );
 
+router.post('/reauth', async (req, res) => {
+  try {
+    const { token, user } = await User.reauthenticateUser(req.body.token);
+    res.json({ token, user });
+  } catch (error) {
+    res.status(422).send({ error: error.toString() });
+  }
+});
+
 router.post('/signup', async (req, res) => {
   try {
     const receivedUser = req.body;
@@ -106,8 +114,8 @@ router.route('/users/:id')
   })
   .put(async (req, res) => {
     try {
-      const result = await User.updateUser(req.params.id, req.body);
-      res.json(result);
+      const user = await User.updateUser(req.params.id, req.body);
+      res.json({ user });
     } catch (error) {
       res.status(500).json({ error });
     }
