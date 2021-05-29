@@ -65,7 +65,17 @@ router.route('/projects/:id')
     },
   );
 
-// Updated
+router.post('/reauth', async (req, res) => {
+  try {
+    console.log('req.body.token:', req.body.token);
+    const { token, user } = await User.reauthenticateUser(req.body.token);
+    console.log('user:', user);
+    res.json({ token, user });
+  } catch (error) {
+    res.status(422).send({ error: error.toString() });
+  }
+});
+
 router.post('/signup', async (req, res) => {
   try {
     const receivedUser = req.body;
@@ -76,7 +86,6 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Updated
 router.post('/signin', requireSignin, async (req, res) => {
   try {
     const { token, user: { id, email, firstName, lastName, location, picture, bio, roles, skills, badges, projects } } = await User.signin(req.user);
@@ -107,8 +116,8 @@ router.route('/users/:id')
   })
   .put(async (req, res) => {
     try {
-      const result = await User.updateUser(req.params.id, req.body);
-      res.json(result);
+      const user = await User.updateUser(req.params.id, req.body);
+      res.json({ user });
     } catch (error) {
       res.status(500).json({ error });
     }
