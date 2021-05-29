@@ -15,7 +15,6 @@ router.get('/', (req, res) => {
 router.route('/projects')
   .get(async (req, res) => {
     try {
-      console.log('here');
       const result = await Project.getProjects();
       res.json(result);
     } catch (error) {
@@ -68,9 +67,7 @@ router.route('/projects/:id')
 
 router.post('/reauth', async (req, res) => {
   try {
-    console.log('req.body.token:', req.body.token);
     const { token, user } = await User.reauthenticateUser(req.body.token);
-    console.log('user:', user);
     res.json({ token, user });
   } catch (error) {
     res.status(422).send({ error: error.toString() });
