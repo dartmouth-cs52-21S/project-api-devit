@@ -10,7 +10,8 @@ const UserSchema = new Schema({
   picture: { type: String },
   bio: { type: String },
   roles: { type: [String] },
-  skills: { type: [String] },
+  devSkills: { type: [String] },
+  desSkills: { type: [String] },
   badges: { type: [String] },
   projects: { type: [Schema.Types.ObjectId], ref: 'Project' },
 }, {
