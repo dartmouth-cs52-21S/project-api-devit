@@ -11,6 +11,9 @@ const ProjectSchema = new Schema({
   Slack: { type: [String] },
   logo: { type: String },
   neededTeam: { type: [String] },
+  problemDescription: { type: String },
+  audienceDescription: { type: String },
+  marketDescription: { type: String },
   team: { type: [Schema.Types.ObjectId], ref: 'User' },
 }, {
   toObject: { virtuals: true },
