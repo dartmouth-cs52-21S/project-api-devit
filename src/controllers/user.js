@@ -26,6 +26,10 @@ function decodeToken(token) {
 export const reauthenticateUser = async (token) => {
   const decodedToken = decodeToken(token);
   const user = await UserModel.findOne({ _id: decodedToken.sub });
+  if (user) {
+    const populated = await user.populate('projects').execPopulate();
+    return { token, user: populated };
+  }
   return { token, user };
 };
 
@@ -63,6 +67,10 @@ export const signup = async (newUser) => {
 export const getAllUsers = async () => {
   try {
     const user = await UserModel.find();
+    if (user) {
+      const populated = await user.populate('projects').execPopulate();
+      return populated;
+    }
     return user;
   } catch (error) {
     console.error(error);
@@ -78,6 +86,10 @@ export const getAllUsers = async () => {
 export const getUserById = async (id) => {
   try {
     const user = await UserModel.findOne({ _id: id });
+    if (user) {
+      const populated = await user.populate('projects').execPopulate();
+      return populated;
+    }
     return user;
   } catch (error) {
     console.error(error);
