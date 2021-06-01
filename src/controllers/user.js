@@ -1,5 +1,6 @@
 import jwt from 'jwt-simple';
 import UserModel from '../models/user';
+import ProjectModel from '../models/project';
 
 /**
  * @description retrieves token for user
@@ -24,11 +25,17 @@ function decodeToken(token) {
  * @returns {Object} user token
  */
 export const reauthenticateUser = async (token) => {
-  const decodedToken = decodeToken(token);
-  const user = await UserModel.findOne({ _id: decodedToken.sub });
+  const { sub } = decodeToken(token);
+  let user = await UserModel.findById(sub);
   if (user) {
-    const populated = await user.populate('projects').execPopulate();
-    return { token, user: populated };
+    user = await user.populate({
+      path: 'projects',
+      model: ProjectModel,
+      populate: [
+        { path: 'team', model: UserModel },
+        { path: 'author', model: UserModel },
+      ],
+    }).populate('author').execPopulate();
   }
   return { token, user };
 };
@@ -39,7 +46,17 @@ export const reauthenticateUser = async (token) => {
  * @returns {Object} user token
  */
 export const signin = async (userCredentials) => {
-  const user = await UserModel.findOne({ email: userCredentials.email });
+  let user = await UserModel.findOne({ email: userCredentials.email });
+  if (user) {
+    user = await user.populate({
+      path: 'projects',
+      model: ProjectModel,
+      populate: [
+        { path: 'team', model: UserModel },
+        { path: 'author', model: UserModel },
+      ],
+    }).execPopulate();
+  }
   return { token: tokenForUser(userCredentials), user };
 };
 
