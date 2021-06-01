@@ -36,7 +36,8 @@ export const reauthenticateUser = async (token) => {
  * @returns {Object} user token
  */
 export const signin = async (userCredentials) => {
-  const user = await UserModel.findOne({ email: userCredentials.email });
+  let user = await UserModel.findOne({ email: userCredentials.email });
+  if (user) user = await user.populate('projects').execPopulate();
   return { token: tokenForUser(userCredentials), user };
 };
 
