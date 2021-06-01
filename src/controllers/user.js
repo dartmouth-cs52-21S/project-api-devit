@@ -31,11 +31,11 @@ export const reauthenticateUser = async (token) => {
     user = await user.populate({
       path: 'projects',
       model: ProjectModel,
-      populate: {
-        path: 'team',
-        model: UserModel,
-      },
-    }).execPopulate();
+      populate: [
+        { path: 'team', model: UserModel },
+        { path: 'author', model: UserModel },
+      ],
+    }).populate('author').execPopulate();
   }
   return { token, user };
 };
@@ -51,10 +51,10 @@ export const signin = async (userCredentials) => {
     user = await user.populate({
       path: 'projects',
       model: ProjectModel,
-      populate: {
-        path: 'team',
-        model: UserModel,
-      },
+      populate: [
+        { path: 'team', model: UserModel },
+        { path: 'author', model: UserModel },
+      ],
     }).execPopulate();
   }
   return { token: tokenForUser(userCredentials), user };
