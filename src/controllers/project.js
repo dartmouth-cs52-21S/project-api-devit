@@ -1,14 +1,17 @@
 import ProjectModel from '../models/project';
+import UserModel from '../models/user';
 
-export const createProject = async (newProj, author) => {
+export const createProject = async (newProject, author) => {
   try {
-    newProj.team = [author];
-    const proj = await ProjectModel.create(newProj);
-    if (proj) {
-      const populated = await proj.populate('team').execPopulate();
-      return populated;
-    }
-    return proj;
+    // Add author of project as a member of its team
+    newProject.team = [author];
+    let project = await ProjectModel.create(newProject);
+    if (project) project = await project.populate('team').execPopulate();
+
+    let user = await UserModel.findOneAndUpdate({ _id: author.id }, { $push: { projects: project } }, { new: true });
+    if (user) user = await user.populate('projects').execPopulate();
+
+    return { project, user };
   } catch (error) {
     throw new Error(`create project error: ${error}`);
   }
