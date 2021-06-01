@@ -20,6 +20,7 @@ const UserSchema = new Schema({
   pullRequests: { type: Number },
   eventsCreated: { type: Number },
   messagesSent: { type: Number },
+  githubUsername: { type: String },
 }, {
   toObject: { virtuals: true },
   toJSON: {
