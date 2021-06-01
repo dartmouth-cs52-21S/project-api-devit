@@ -24,8 +24,9 @@ function decodeToken(token) {
  * @returns {Object} user token
  */
 export const reauthenticateUser = async (token) => {
-  const decodedToken = decodeToken(token);
-  const user = await UserModel.findOne({ _id: decodedToken.sub });
+  const { sub } = decodeToken(token);
+  let user = await UserModel.findById(sub);
+  if (user) user = await user.populate('projects').execPopulate();
   return { token, user };
 };
 
@@ -35,7 +36,8 @@ export const reauthenticateUser = async (token) => {
  * @returns {Object} user token
  */
 export const signin = async (userCredentials) => {
-  const user = await UserModel.findOne({ email: userCredentials.email });
+  let user = await UserModel.findOne({ email: userCredentials.email });
+  if (user) user = await user.populate('projects').execPopulate();
   return { token: tokenForUser(userCredentials), user };
 };
 
@@ -107,6 +109,7 @@ export const deleteUser = async (id) => {
  * @returns {Promise<UserModel>} promise that resolves to user object or error
  */
 export const updateUser = async (id, fields) => {
+  console.log('fields:', fields);
   try {
     const user = await UserModel.findByIdAndUpdate({ _id: id }, fields, { new: true });
     return user;
