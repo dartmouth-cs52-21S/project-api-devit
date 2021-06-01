@@ -3,7 +3,8 @@ import { Router } from 'express';
 import * as Project from '../controllers/project';
 import * as User from '../controllers/user';
 import * as ChatMessage from '../controllers/chatMessage';
-import { requireSignin } from '../services/passport';
+// import { requireSignin } from '../services/passport';
+import { requireSignin, requireAuth } from '../services/passport';
 import signS3 from '../services/s3';
 
 const router = Router();
@@ -22,11 +23,11 @@ router.route('/projects')
     }
   })
   .post(
-    // requireAuth,
+    requireAuth,
     async (req, res) => {
       try {
-        const result = await Project.createProject(req.body, req.user);
-        res.json(result);
+        const { project, user } = await Project.createProject(req.body, req.user);
+        res.json({ project, user });
       } catch (error) {
         res.status(500).json({ error });
       }
@@ -67,8 +68,8 @@ router.route('/projects/:id')
 
 router.post('/reauth', async (req, res) => {
   try {
-    const { token, user } = await User.reauthenticateUser(req.body.token);
-    res.json({ token, user });
+    const { user } = await User.reauthenticateUser(req.body.token);
+    res.json({ user });
   } catch (error) {
     res.status(422).send({ error: error.toString() });
   }
@@ -113,6 +114,7 @@ router.route('/users/:id')
     }
   })
   .put(async (req, res) => {
+    console.log('req.body:', req.body);
     try {
       const user = await User.updateUser(req.params.id, req.body);
       res.json({ user });
