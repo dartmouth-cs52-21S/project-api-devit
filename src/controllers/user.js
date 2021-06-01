@@ -1,5 +1,6 @@
 import jwt from 'jwt-simple';
 import UserModel from '../models/user';
+import ProjectModel from '../models/project';
 
 /**
  * @description retrieves token for user
@@ -26,7 +27,16 @@ function decodeToken(token) {
 export const reauthenticateUser = async (token) => {
   const { sub } = decodeToken(token);
   let user = await UserModel.findById(sub);
-  if (user) user = await user.populate('projects').execPopulate();
+  if (user) {
+    user = await user.populate({
+      path: 'projects',
+      model: ProjectModel,
+      populate: {
+        path: 'team',
+        model: UserModel,
+      },
+    }).execPopulate();
+  }
   return { token, user };
 };
 
@@ -37,7 +47,16 @@ export const reauthenticateUser = async (token) => {
  */
 export const signin = async (userCredentials) => {
   let user = await UserModel.findOne({ email: userCredentials.email });
-  if (user) user = await user.populate('projects').execPopulate();
+  if (user) {
+    user = await user.populate({
+      path: 'projects',
+      model: ProjectModel,
+      populate: {
+        path: 'team',
+        model: UserModel,
+      },
+    }).execPopulate();
+  }
   return { token: tokenForUser(userCredentials), user };
 };
 

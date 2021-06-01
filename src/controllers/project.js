@@ -9,7 +9,16 @@ export const createProject = async (newProject, author) => {
     if (project) project = await project.populate('team').execPopulate();
 
     let user = await UserModel.findOneAndUpdate({ _id: author.id }, { $push: { projects: project } }, { new: true });
-    if (user) user = await user.populate('projects').execPopulate();
+    if (user) {
+      user = await user.populate({
+        path: 'projects',
+        model: ProjectModel,
+        populate: {
+          path: 'team',
+          model: UserModel,
+        },
+      }).execPopulate();
+    }
 
     return { project, user };
   } catch (error) {
