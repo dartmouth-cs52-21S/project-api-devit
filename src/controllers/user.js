@@ -128,7 +128,6 @@ export const deleteUser = async (id) => {
  * @returns {Promise<UserModel>} promise that resolves to user object or error
  */
 export const updateUser = async (id, fields) => {
-  console.log('fields:', fields);
   try {
     const user = await UserModel.findByIdAndUpdate({ _id: id }, fields, { new: true });
     return user;
