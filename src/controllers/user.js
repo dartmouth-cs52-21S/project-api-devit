@@ -1,5 +1,6 @@
 import jwt from 'jwt-simple';
 import UserModel from '../models/user';
+import ProjectModel from '../models/project';
 
 /**
  * @description retrieves token for user
@@ -26,7 +27,16 @@ function decodeToken(token) {
 export const reauthenticateUser = async (token) => {
   const { sub } = decodeToken(token);
   let user = await UserModel.findById(sub);
-  if (user) user = await user.populate('projects').execPopulate();
+  if (user) {
+    user = await user.populate({
+      path: 'projects',
+      model: ProjectModel,
+      populate: [
+        { path: 'team', model: UserModel },
+        { path: 'author', model: UserModel },
+      ],
+    }).populate('author').execPopulate();
+  }
   return { token, user };
 };
 
@@ -37,7 +47,16 @@ export const reauthenticateUser = async (token) => {
  */
 export const signin = async (userCredentials) => {
   let user = await UserModel.findOne({ email: userCredentials.email });
-  if (user) user = await user.populate('projects').execPopulate();
+  if (user) {
+    user = await user.populate({
+      path: 'projects',
+      model: ProjectModel,
+      populate: [
+        { path: 'team', model: UserModel },
+        { path: 'author', model: UserModel },
+      ],
+    }).execPopulate();
+  }
   return { token: tokenForUser(userCredentials), user };
 };
 
@@ -65,6 +84,10 @@ export const signup = async (newUser) => {
 export const getAllUsers = async () => {
   try {
     const user = await UserModel.find();
+    if (user) {
+      const populated = await user.populate('projects').execPopulate();
+      return populated;
+    }
     return user;
   } catch (error) {
     console.error(error);
@@ -80,6 +103,10 @@ export const getAllUsers = async () => {
 export const getUserById = async (id) => {
   try {
     const user = await UserModel.findOne({ _id: id });
+    if (user) {
+      const populated = await user.populate('projects').execPopulate();
+      return populated;
+    }
     return user;
   } catch (error) {
     console.error(error);
@@ -109,7 +136,6 @@ export const deleteUser = async (id) => {
  * @returns {Promise<UserModel>} promise that resolves to user object or error
  */
 export const updateUser = async (id, fields) => {
-  console.log('fields:', fields);
   try {
     const user = await UserModel.findByIdAndUpdate({ _id: id }, fields, { new: true });
     return user;
