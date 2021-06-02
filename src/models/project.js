@@ -14,8 +14,11 @@ const ProjectSchema = new Schema({
   problemDescription: { type: String },
   audienceDescription: { type: String },
   marketDescription: { type: String },
+  author: { type: Schema.Types.ObjectId, ref: 'User' },
   team: { type: [Schema.Types.ObjectId], ref: 'User' },
+  events: { type: Object },
 }, {
+  timestamps: true,
   toObject: { virtuals: true },
   toJSON: { virtuals: true },
 });

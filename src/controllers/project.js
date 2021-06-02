@@ -3,13 +3,21 @@ import UserModel from '../models/user';
 
 export const createProject = async (newProject, author) => {
   try {
-    // Add author of project as a member of its team
     newProject.team = [author];
     let project = await ProjectModel.create(newProject);
-    if (project) project = await project.populate('team').execPopulate();
+    if (project) project = await project.populate('team').populate('author').execPopulate();
 
     let user = await UserModel.findOneAndUpdate({ _id: author.id }, { $push: { projects: project } }, { new: true });
-    if (user) user = await user.populate('projects').execPopulate();
+    if (user) {
+      user = await user.populate({
+        path: 'projects',
+        model: ProjectModel,
+        populate: [
+          { path: 'team', model: UserModel },
+          { path: 'author', model: UserModel },
+        ],
+      }).execPopulate();
+    }
 
     return { project, user };
   } catch (error) {
@@ -25,7 +33,7 @@ export const getProject = async (id) => {
   try {
     const proj = await ProjectModel.findById({ _id: id });
     if (proj) {
-      const populated = await proj.populate('team').execPopulate();
+      const populated = await proj.populate('team').populate('author').execPopulate();
       return populated;
     }
     return proj;
@@ -46,7 +54,7 @@ export const updateProject = async (id, fields) => {
   try {
     const proj = await ProjectModel.findByIdAndUpdate({ _id: id }, fields, { new: true });
     if (proj) {
-      const populated = await proj.populate('team').execPopulate();
+      const populated = await proj.populate('team').populate('author').execPopulate();
       return populated;
     }
     return proj;
