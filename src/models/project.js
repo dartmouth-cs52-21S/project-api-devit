@@ -16,6 +16,7 @@ const ProjectSchema = new Schema({
   marketDescription: { type: String },
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   team: { type: [Schema.Types.ObjectId], ref: 'User' },
+  events: { type: Object },
 }, {
   timestamps: true,
   toObject: { virtuals: true },
