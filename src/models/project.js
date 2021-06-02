@@ -15,6 +15,7 @@ const ProjectSchema = new Schema({
   audienceDescription: { type: String },
   marketDescription: { type: String },
   team: { type: [Schema.Types.ObjectId], ref: 'User' },
+  events: { type: Object },
 }, {
   toObject: { virtuals: true },
   toJSON: { virtuals: true },
