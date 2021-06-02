@@ -79,7 +79,8 @@ export const getAllUsers = async () => {
  */
 export const getUserById = async (id) => {
   try {
-    const user = await UserModel.findOne({ _id: id });
+    let user = await UserModel.findOne({ _id: id });
+    if (user) user = await user.populate('projects').execPopulate();
     return user;
   } catch (error) {
     console.error(error);
@@ -111,7 +112,8 @@ export const deleteUser = async (id) => {
 export const updateUser = async (id, fields) => {
   console.log('fields:', fields);
   try {
-    const user = await UserModel.findByIdAndUpdate({ _id: id }, fields, { new: true });
+    let user = await UserModel.findByIdAndUpdate({ _id: id }, fields, { new: true });
+    if (user) user = await user.populate('projects').execPopulate();
     return user;
   } catch (error) {
     console.error(error);

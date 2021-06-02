@@ -2,8 +2,8 @@ import mongoose, { Schema } from 'mongoose';
 
 const ChatMessageSchema = new Schema({
   body: String,
-  // projectId: { type: Schema.Types.ObjectId, ref: 'Project' },
-  projectId: String,
+  projectId: { type: Schema.Types.ObjectId, ref: 'Project' },
+  // projectId: String,
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   isDeleted: Boolean,
 }, {

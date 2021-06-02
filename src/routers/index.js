@@ -114,7 +114,6 @@ router.route('/users/:id')
     }
   })
   .put(async (req, res) => {
-    console.log('req.body:', req.body);
     try {
       const user = await User.updateUser(req.params.id, req.body);
       res.json({ user });
