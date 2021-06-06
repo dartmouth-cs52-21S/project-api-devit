@@ -8,6 +8,7 @@ const ProjectSchema = new Schema({
   tools: { type: [String] },
   Figma: { type: [String] },
   GitHub: { type: [String] },
+  GitHubLabel: { type: [String] },
   Slack: { type: [String] },
   logo: { type: String },
   neededTeam: { type: [String] },

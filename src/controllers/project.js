@@ -51,6 +51,7 @@ export const deleteProject = async (id) => {
   }
 };
 export const updateProject = async (id, fields) => {
+  console.log(fields);
   try {
     const proj = await ProjectModel.findByIdAndUpdate({ _id: id }, fields, { new: true });
     if (proj) {
