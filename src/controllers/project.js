@@ -26,7 +26,11 @@ export const createProject = async (newProject, author) => {
 };
 
 export const getProjects = async () => {
-  return ProjectModel.find();
+  try {
+    return await ProjectModel.find().populate('team').populate('author').exec();
+  } catch (error) {
+    throw new Error(`get projects error: ${error}`);
+  }
 };
 
 export const getProject = async (id) => {
@@ -51,7 +55,6 @@ export const deleteProject = async (id) => {
   }
 };
 export const updateProject = async (id, fields) => {
-  console.log(fields);
   try {
     const proj = await ProjectModel.findByIdAndUpdate({ _id: id }, fields, { new: true });
     if (proj) {
