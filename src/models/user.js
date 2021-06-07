@@ -21,6 +21,8 @@ const UserSchema = new Schema({
   eventsCreated: { type: Number },
   messagesSent: { type: Number },
   githubUsername: { type: String },
+  endorsements: { type: Number },
+  endorsedBy: { type: [Schema.Types.ObjectId], ref: 'User' },
 }, {
   toObject: { virtuals: true },
   toJSON: {
